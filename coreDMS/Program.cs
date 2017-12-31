@@ -8,7 +8,7 @@ namespace coreDMS
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Starting server");
 
             BuildWebHost(args).Run();
         }
