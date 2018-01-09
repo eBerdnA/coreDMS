@@ -1,0 +1,1 @@
+\coreDMS.DBCreation\dotnet run -- -s C:\dev\coreDMS\sql -f C:\dev\coreDMS\coreDMS.DBCreation\out.db
