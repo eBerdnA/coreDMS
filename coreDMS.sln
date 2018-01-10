@@ -5,10 +5,11 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coreDMS", "coreDMS\coreDMS.csproj", "{88DE1867-E0E0-4AFC-A066-C9E81916456B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coreDMS.DBCreation", "coreDMS.DBCreation\coreDMS.DBCreation.csproj", "{0284AE51-7AA8-4304-9568-3D54A0635DB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coreDMS.DBCreation", "coreDMS.DBCreation\coreDMS.DBCreation.csproj", "{0284AE51-7AA8-4304-9568-3D54A0635DB2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{77BD5A66-4614-4610-A501-BD41F81960B7}"
 	ProjectSection(SolutionItems) = preProject
+		sql\000-LogTable.sql = sql\000-LogTable.sql
 		sql\001-Tag.sql = sql\001-Tag.sql
 		sql\002-Files.sql = sql\002-Files.sql
 		sql\003-FileStates.sql = sql\003-FileStates.sql

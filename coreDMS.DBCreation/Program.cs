@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace coreDMS.DBCreation
 {
@@ -39,6 +41,8 @@ namespace coreDMS.DBCreation
             app.Execute(args);
 
             Console.WriteLine("done");
+            Console.WriteLine("Press any key to exit");
+            Console.ReadKey();
         }
 
         static void BuildDb(string dbfile, string sqlFilesPath)
@@ -51,7 +55,7 @@ namespace coreDMS.DBCreation
             {
                 if (Directory.Exists(sqlFilesPath))
                 {
-                    var sqlFiles = Directory.GetFiles(sqlFilesPath, "*.sql");
+                    var sqlFiles = Directory.GetFiles(sqlFilesPath, "*.sql").Where(name => !name.EndsWith("000-LogTable.sql", StringComparison.InvariantCultureIgnoreCase)).ToArray();
                     if (sqlFiles.Length == 0)
                     {
                         Console.WriteLine("no sql files found, therefore doing nothing");
@@ -62,10 +66,10 @@ namespace coreDMS.DBCreation
                     using (var db = new DbCreationContext(optionsBuilder.Options))
                     {
                         db.Database.EnsureCreated();
+                        RunScript(db, sqlFilesPath + "\\" + "000-LogTable.sql");
                         foreach (var file in sqlFiles)
                         {
-                            var command = File.ReadAllText(file);
-                            db.Database.ExecuteSqlCommand(command);
+                            RunScript(db, file);
                         }
                     }
                 }
@@ -78,6 +82,16 @@ namespace coreDMS.DBCreation
             {
                 Console.WriteLine("db file already exists, therefore doing nothing");
             }
+        }
+
+        static void RunScript(DbCreationContext db, string filePath)
+        {
+            var scrriptName = filePath.Substring(filePath.LastIndexOf("\\")+1);
+            var scriptOrder = int.Parse(scrriptName.Substring(0, 3));
+            var command = File.ReadAllText(filePath);
+            db.Database.ExecuteSqlCommand(command);
+            var cmd = string.Format("INSERT INTO LogTable (ScriptOrder, ScriptName, createdAt) VALUES ({0}, '{1}', '{2}');", scriptOrder, scrriptName, DateTime.UtcNow.ToString());
+            db.Database.ExecuteSqlCommand(cmd);
         }
     }
 }
