@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace coreDMS.DBCreation
+namespace CoreDMS.DBCreation
 {
     class Program
     {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using System;
 
-namespace coreDMS
+namespace CoreDMS
 {
     class Program
     {
