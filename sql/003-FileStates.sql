@@ -1,0 +1,6 @@
+CREATE TABLE `FileStates` ( 
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT, 
+	`name` VARCHAR(255), 
+	`createdAt` DATETIME NOT NULL, 
+	`updatedAt` DATETIME NOT NULL 
+	)

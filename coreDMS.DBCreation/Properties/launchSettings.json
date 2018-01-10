@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "coreDMS.DBCreation": {
+      "commandName": "Project",
+      "commandLineArgs": "-s C:\\dev\\coreDMS\\sql -f C:\\dev\\coreDMS\\coreDMS.DBCreation\\out.db"
+    }
+  }
+}

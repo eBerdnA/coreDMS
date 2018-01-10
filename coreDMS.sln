@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coreDMS", "coreDMS\coreDMS.csproj", "{88DE1867-E0E0-4AFC-A066-C9E81916456B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coreDMS", "coreDMS\coreDMS.csproj", "{88DE1867-E0E0-4AFC-A066-C9E81916456B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coreDMS.DBCreation", "coreDMS.DBCreation\coreDMS.DBCreation.csproj", "{0284AE51-7AA8-4304-9568-3D54A0635DB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{77BD5A66-4614-4610-A501-BD41F81960B7}"
+	ProjectSection(SolutionItems) = preProject
+		sql\000-LogTable.sql = sql\000-LogTable.sql
+		sql\001-Tag.sql = sql\001-Tag.sql
+		sql\002-Files.sql = sql\002-Files.sql
+		sql\003-FileStates.sql = sql\003-FileStates.sql
+		sql\004-FileTag.sql = sql\004-FileTag.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A65E2326-01F5-46B7-97F6-7FD193DC3F5D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coreDMS.Model", "coreDMS.Model\coreDMS.Model.csproj", "{9A9664CC-1253-40E9-8EC6-0910144213B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +33,14 @@ Global
 		{88DE1867-E0E0-4AFC-A066-C9E81916456B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88DE1867-E0E0-4AFC-A066-C9E81916456B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88DE1867-E0E0-4AFC-A066-C9E81916456B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0284AE51-7AA8-4304-9568-3D54A0635DB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0284AE51-7AA8-4304-9568-3D54A0635DB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0284AE51-7AA8-4304-9568-3D54A0635DB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0284AE51-7AA8-4304-9568-3D54A0635DB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A9664CC-1253-40E9-8EC6-0910144213B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9664CC-1253-40E9-8EC6-0910144213B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9664CC-1253-40E9-8EC6-0910144213B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9664CC-1253-40E9-8EC6-0910144213B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
