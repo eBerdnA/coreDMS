@@ -11,6 +11,12 @@ namespace CoreDMS.Model
         public virtual DbSet<FileTag> FileTag { get; set; }
         public virtual DbSet<LogTable> LogTable { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
+        public virtual DbSet<Upload> Upload { get; set; }
+
+        public DMSContext(DbContextOptions<DMSContext> options)
+            : base(options)
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -98,7 +104,7 @@ namespace CoreDMS.Model
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CreatedAt)
                     .IsRequired()
@@ -150,7 +156,7 @@ namespace CoreDMS.Model
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CreatedAt)
                     .IsRequired()
@@ -164,6 +170,29 @@ namespace CoreDMS.Model
                 entity.Property(e => e.UpdatedAt)
                     .IsRequired()
                     .HasColumnName("updatedAt")
+                    .HasColumnType("DATETIME");
+            });
+
+            modelBuilder.Entity<Upload>()
+            .ToTable("Uploads");
+
+            modelBuilder.Entity<Upload>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasColumnType("VARCHAR(255)");
+
+                entity.Property(e => e.Path)
+                    .IsRequired()
+                    .HasColumnType("VARCHAR(255)");
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasColumnName("createdAt")
                     .HasColumnType("DATETIME");
             });
         }
