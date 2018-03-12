@@ -12,6 +12,7 @@ namespace CoreDMS.Model
         public virtual DbSet<LogTable> LogTable { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<Upload> Upload { get; set; }
+        public virtual DbSet<UploadError> UploadError { get; set; }
 
         public DMSContext(DbContextOptions<DMSContext> options)
             : base(options)
@@ -20,11 +21,6 @@ namespace CoreDMS.Model
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlite(@"Datasource=C:\dev\coreDMS\coreDMS.DBCreation\DMS.db");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -194,6 +190,29 @@ namespace CoreDMS.Model
                     .IsRequired()
                     .HasColumnName("createdAt")
                     .HasColumnType("DATETIME");
+            });
+
+            modelBuilder.Entity<UploadError>()
+            .ToTable("UploadErrors");
+
+            modelBuilder.Entity<UploadError>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();                
+
+                entity.Property(e => e.Error)
+                    .HasColumnName("Error")
+                    .HasColumnType("VARCHAR(255)");
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasColumnName("createdAt")
+                    .HasColumnType("DATETIME");
+
+                entity.HasOne(d => d.Upload)
+                    .WithMany(p => p.UploadError)
+                    .HasForeignKey(d => d.UploadId);
             });
         }
     }

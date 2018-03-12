@@ -10,6 +10,21 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\coreDMS.Model\coreDMS.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Views/**" CopyToPublishDirectory="PreserveNewest" />
+    <Content Remove="wwwroot/processed/**" />
+    <Content Remove="wwwroot/uploads/**" />
+  </ItemGroup>
 </Project>

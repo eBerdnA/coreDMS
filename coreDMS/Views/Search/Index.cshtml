@@ -1,0 +1,178 @@
+﻿@model IEnumerable<CoreDMS.Model.Tag>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Search</h2>
+
+<div style="border: 1px solid #cecece; overflow: hidden; padding: 2px;margin-bottom: 3px;">
+    <h4>possible tags</h4>
+    <div id="possible-tags">
+        @foreach(var tag in Model)
+        {
+        <div id="btn-@tag.Id" class="btnTagSearch btn btn-info" title="@tag.Name">
+            @tag.Name
+        </div>
+        }
+    </div>
+</div>
+<div style="border: 1px solid #cecece; overflow: hidden; padding: 2px;margin-bottom: 3px;">
+    <h4>selected tags</h4>
+    <div id="selected-tags">
+    </div>
+    <div style="clear: both;">
+        <button id="btn-SearchDocs" type="button" class="btn btn-default" style="cursor: pointer">
+            Suchen
+        </button>
+    </div>
+</div>
+<div id="search-result">
+</div>
+
+<div style="border: 1px solid #cecece; overflow: hidden; padding: 2px;">
+    <h4>search hash value</h4>
+    <div>
+        <input type="text" id="hashvalue">
+    </div>
+    <button id="btn-SearchDocsHash" type="button" class="btn btn-default" style="cursor: pointer">
+        Suchen
+    </button>
+</div>
+<div id="searchHash-result">
+</div>
+
+<script>
+    type="text/javascript">
+
+    $(function () {
+        var selectedTags = [];
+        var domTargetElementSelected = 'selected-tags';
+
+        $('#btn-SearchDocsHash').click(function(evt){
+            $('#searchHash-result').empty();
+            var hashInput = $('#hashvalue').val();
+            $.ajax({
+                type: 'POST',
+                url: '/search/hash',
+                data: JSON.stringify({ hash: hashInput }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successHash,
+                error: successHash
+            })
+        })
+
+        $('#btn-SearchDocs').click(function(evt){
+            $('#search-result').empty();
+            var myJsonString = JSON.stringify(selectedTags);
+            console.log(myJsonString);
+            if (selectedTags.length > 0) {
+                //http://stackoverflow.com/a/8890787
+                $.ajax({
+                    type: 'POST',
+                    url: '/search/find',
+                    data: JSON.stringify(selectedTags),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: success,
+                    error: error
+                })
+            } else {
+                alert('Please select at least one tag')
+            }
+        })
+
+        var successHash = function (result) {
+            $('#searchHash-result').html(result.responseText);
+        }
+
+        var success = function (data) {
+            console.log(data.responseText);
+            $('#search-result').html(data.responseText);
+        };
+
+        var error = function (err) {
+            console.log('err');
+            if (err.status == 200) {
+                $('#search-result').html(err.responseText);
+            } else {
+                console.log(err);
+            }
+        };
+
+        function addSelectedTag() {
+            var $this = $(this);
+            var cleaned = $this[0].id.replace('btn-','');
+            selectedTags.push({
+                'id': cleaned,
+                'name': $this[0].innerText
+            });
+            renderSelectedTags();
+            $this.unbind("click");
+        }
+
+        $("div.btnTagSearch").click(addSelectedTag);
+
+        var renderSelectedTags = function() {
+            $('#'+ domTargetElementSelected).empty();
+            selectedTags.sort();
+            selectedTags.forEach(function (tag) {
+                console.log(tag)
+                builtTag(tag);
+            })
+        }
+
+        var builtTag = function(name) {
+
+            jQuery('<div/>', {
+                id: 'btnSel-' + name.id,
+                title: name.name,
+                rel: 'external',
+                text: name.name,
+                class: 'btnTagSearchSel btn btn-info'
+            })
+            .appendTo('#' + domTargetElementSelected)
+            .bind("click", removeHandler);
+        }
+
+        function removeHandler() {
+            var $this = $(this);
+            removeSelectedTagFromDom($this[0].id);
+            removeTagFromArray($this[0].id);
+            $('#btn-'+ $this[0].id.replace('btnSel-','')).bind("click", addSelectedTag);
+        }
+
+        var addToSelectArea = function(tagName) {
+            tagName = tagName.replace(/ /g,'');
+            jQuery('<div/>', {
+                id: 'btnSel-' + tagName,
+                title: tagName,
+                rel: 'external',
+                text: tagName,
+                class: 'btnTagSearch'
+            })
+            .appendTo('#' + 'possible-tags')
+            .click(function(evt) {
+                selectedTags.push(evt.toElement.innerText);
+                renderSelectedTags();
+                removeSelectedTagFromDom(evt.toElement.id);
+            })
+        }
+
+        var removeTagFromArray = function (tagName) {
+            var cleaned = tagName.replace('btnSel-', '');
+            console.log(cleaned)
+            for (var i=selectedTags.length-1; i>=0; i--) {
+                if (selectedTags[i].id === cleaned) {
+                    selectedTags.splice(i, 1);
+                    // break;       //<-- Uncomment  if only the first term has to be removed
+                }
+            }
+        }
+
+        var removeSelectedTagFromDom = function (elementId) {
+            console.log(elementId)
+            $('#'+elementId).remove();
+        }
+    });
+</script>

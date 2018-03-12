@@ -4,17 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - DMS</title>
-
-    <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    <script src="~/lib/js/jquery-2.2.4.min.js"></script>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />    
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -31,19 +23,27 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="All">All</a></li>
+                    <li><a asp-area="" asp-controller="Tag" asp-action="Index">Tag</a></li>
+                    <li><a asp-area="" asp-controller="Search" asp-action="Index">Search</a></li>
+                    <li><a asp-area="" asp-controller="Upload" asp-action="Index">Upload</a></li>
+                    <li><a asp-area="" asp-controller="Upload" asp-action="Uploads">Uploads</a></li>
+                    <li><a asp-area="" asp-controller="Upload" asp-action="Errors">Errors</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+            @RenderBody()
+        </div>
         <hr />
         <footer>
             <p>&copy; 2017 - coreDMS</p>
         </footer>
     </div>
 
-    <environment names="Development">
+    @*<environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
@@ -62,7 +62,7 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    </environment>*@
 
     @RenderSection("Scripts", required: false)
 </body>

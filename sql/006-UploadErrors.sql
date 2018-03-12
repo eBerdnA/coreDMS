@@ -1,0 +1,7 @@
+﻿CREATE TABLE "UploadErrors" ( 
+	"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+	"UploadId" INTEGER NOT NULL , 
+	"Error" Text, 
+	`createdAt` DATETIME NOT NULL, 
+	FOREIGN KEY (UploadId) REFERENCES Uploads(id)
+	)

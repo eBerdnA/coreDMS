@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using CoreDMS.Model;
@@ -38,9 +40,12 @@ namespace CoreDMS.Controllers
                 .Where(f => f.Id == fileid).FirstOrDefault();
             file.State = state;
             file.UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
-            DateTime dt;
-            DateTime.TryParse(documentdate, null, DateTimeStyles.AssumeUniversal, out dt);
-            file.DocumentDate = dt.ToUniversalTime().ToString(Constants.DocumentDateFormat);
+            if (documentdate != null)
+            {
+                DateTime dt;
+                DateTime.TryParse(documentdate, null, DateTimeStyles.AssumeUniversal, out dt);
+                file.DocumentDate = dt.ToUniversalTime().ToString(Constants.DocumentDateFormat); 
+            }
 
             List<string> splittedTags = SplitTags(tags);
 
@@ -145,13 +150,7 @@ namespace CoreDMS.Controllers
             {
                 File = file
             };
-            StringBuilder sb = new StringBuilder();
-            foreach (FileTag tag in file.FileTag)
-            {
-                sb.Append(tag.Tag.Name + ", ");
-            }
-            sb.Remove(sb.Length - 2, 2);
-            model.Tags = sb.ToString();
+            model.Tags = BuildTagString(file.FileTag);
 
             List<FileStates> states = _dmsContext.FileStates.ToList();
             model.FileStates = new List<SelectListItem>();
@@ -159,8 +158,110 @@ namespace CoreDMS.Controllers
             {
                 model.FileStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString() });
             }
-            model.FileDate = DateTime.Parse(file.DocumentDate).ToString("yyyy-MM-dd");
+            if (file.DocumentDate != null && file.DocumentDate.Length > 1)
+            {
+                model.FileDate = DateTime.Parse(file.DocumentDate).ToString(Constants.DateFormatDateTimePicker);
+            }
             return View(model);
+        }
+
+        private static string BuildTagString(ICollection<FileTag> fileTags)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (FileTag tag in fileTags)
+            {
+                sb.Append(tag.Tag.Name + ", ");
+            }
+            if (sb.Length > 1)
+            {
+                sb.Remove(sb.Length - 2, 2);
+            }
+            return sb.ToString();
+        }
+
+        [HttpGet("/file/get/{id}")]
+        public FileContentResult Get(string id)
+        {
+            var file = _dmsContext.Files.Where(f => f.Id == id).FirstOrDefault();
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(file.Location, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            // https://stackoverflow.com/a/38909848/715348
+            System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = file.Filename,
+                Inline = true  // false = prompt the user for downloading;  true = browser to try to show the file inline
+            };
+
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+            Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            return File(System.IO.File.ReadAllBytes(file.Location), GetContentType(file.Location));
+        }
+
+        [HttpGet("/file/tags/{id}")]
+        public JsonResult Tags(string id)
+        {
+            TagViewModel model = new TagViewModel();
+            Files file = _dmsContext.Files
+                .Include(f => f.FileTag)
+                    .ThenInclude(filetag => filetag.Tag)
+                .Where(f => f.Id == id)
+                .FirstOrDefault();
+            model.tags = BuildTagString(file.FileTag);
+            model.title = file.Title;
+            model.location = file.Location;
+            return Json(model);
+        }
+
+        [HttpPost("/file/delete/{id}")]
+        public IActionResult Delete(string id)
+        {
+            _dmsContext.Database.BeginTransaction();
+            try
+            {
+                var file = _dmsContext.Files
+                            .Include(f => f.FileTag)
+                            .Where(f => f.Id == id).FirstOrDefault();
+                _dmsContext.Remove(file);
+                System.IO.File.Delete(file.Location);
+                _dmsContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _dmsContext.Database.RollbackTransaction();
+                return BadRequest();
+            }
+            _dmsContext.Database.CommitTransaction();
+            return Ok();
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".css", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
         }
     }
 

@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h2>@ViewData["Sitetitle"]</h2>
+<h2>Tag - @ViewData["tagName"]</h2>
 
-    @Html.Partial("FilesPartial", Model)
-    
+@Html.Partial("FilesPartial", Model)

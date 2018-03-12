@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CoreDMS.Model.UploadError>
+
+@{
+    ViewData["Title"] = "Errors";
+}
+<h2>Errors</h2>
+
+<table class="table">
+    <tr>
+        <th>UploadId</th>
+        <th>Error</th>
+        <th>Created</th>
+    </tr>
+    @foreach (var file in Model)
+    {
+        <tr>
+            <td>@file.UploadId</td>
+            <td>@file.Error</td>
+            <td>@file.CreatedAt</td>
+        </tr>
+    }
+</table>

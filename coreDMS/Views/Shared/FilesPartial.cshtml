@@ -1,0 +1,113 @@
+﻿@model IEnumerable<CoreDMS.Model.Files>
+
+<script src="~/js/tooltipster.core.min.js"></script>
+<script src="~/js/tooltipster.bundle.min.js"></script>
+<link rel="stylesheet" href="~/css/tooltipster.bundle.min.css">
+<link rel="stylesheet" href="~/css/tooltipster-sideTip-light.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('.file-link-tool').tooltipster({
+            theme: 'tooltipster-light',
+            content: 'Loading...',
+            contentAsHTML: true,
+            functionBefore: function (instance, helper) {
+                var $origin = $(helper.origin);
+                var file = $origin.context.pathname.substring($origin.context.pathname.lastIndexOf('/') + 1);
+                if ($origin.data('loaded') !== true) {
+                    $.get('/file/tags/' + file, function (data) {
+                        var toolText = "Title: " + data.title + "<br />";
+                        toolText += "Tags: " + data.tags + "<br />";
+                        toolText += "Location: " + data.location;
+                        instance.content(toolText);
+                        $origin.data('loaded', true);
+                    });
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("a.delete-link").click(function (evt) {
+            //console.log(evt)
+            var deleteLink = $(this);
+            deleteLink.hide();
+            var confirmButton = deleteLink.siblings(".delete-confirm");
+            confirmButton.show();
+
+            var cancelDelete = function () {
+                removeEvents();
+                showDeleteLink();
+            };
+
+            var deleteItem = function (evt) {
+                removeEvents();
+                confirmButton.hide();
+                console.log(evt.toElement.previousElementSibling.pathname);
+                $.post(
+                    evt.toElement.previousElementSibling.pathname)
+                    .done(function () {
+                        var parentRow = deleteLink.parents("tr:first");
+                        parentRow.fadeOut('fast', function () {
+                            parentRow.remove();
+                        });
+                    }).fail(function (data) {
+                        alert("error");
+                    });
+                return false;
+            };
+
+            var removeEvents = function () {
+                confirmButton.off("click", deleteItem);
+                $(document).on("click", cancelDelete);
+                $(document).off("keypress", onKeyPress);
+            };
+
+            var showDeleteLink = function () {
+                confirmButton.hide();
+                deleteLink.show();
+            };
+
+            var onKeyPress = function (e) {
+                //Cancel if escape key pressed
+                if (e.which == 27) {
+                    cancelDelete();
+                }
+            };
+
+            confirmButton.on("click", deleteItem);
+            $(document).on("click", cancelDelete);
+            $(document).on("keypress", onKeyPress);
+
+            return false;
+        });
+    });
+</script>
+
+<table class="table">
+    <tr>
+        <th>File</th>
+        <th>Hash</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>DocDate</th>
+        <th>Action</th>
+    </tr>
+    @foreach (var file in Model)
+    {
+        <tr>
+            <td><a class="file-link-tool" href="/file/@file.Id">@file.Filename</a></td>
+            <td>@file.Hash</td>
+            <td dt-value="@file.CreatedAt" dt-format="dd.MM.yyyy HH:mm:ss"></td>
+            <td dt-value="@file.UpdatedAt" dt-format="dd.MM.yyyy HH:mm:ss"></td>
+            <td dt-value="@file.DocumentDate" dt-format="dd.MM.yyyy"></td>
+            <td>
+                <div class="delete-section">
+                    <a class="delete-link" href="/file/delete/@file.Id">Delete</a>
+                    <div class="btn btn-primary delete-confirm" style="display:none" data-delete-id="@file.Id">Confirm Delete</div>
+                </div>
+            </td>
+        </tr>
+    }
+</table>

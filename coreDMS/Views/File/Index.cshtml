@@ -1,0 +1,99 @@
+﻿@model CoreDMS.ViewModels.SingleFileViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/js/jquery.cookie.js"></script>
+<script src="~/js/jQuery.flashMessage.js"></script>
+<h2>File</h2>
+
+<div id="flash-messages" class="alert" style="display:none;">
+    <a class="close" href="#">&times;</a>
+    <p></p>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#flash-messages").flashMessage({ timeout: 0 });
+    });
+</script>
+
+
+<form style="border: 1px solid #cecece; padding: 2px;  margin-bottom: 3px;">
+    <div class="form-group row">
+        <label asp-for="@Model.File.Filename" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-8">
+            <input asp-for="@Model.File.Filename" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.File.Hash" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-8">
+            <input asp-for="@Model.File.Hash" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.File.CreatedAt" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-8">
+            <input asp-for="@Model.File.CreatedAt" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.File.UpdatedAt" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-8">
+            <input asp-for="@Model.File.UpdatedAt" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">View</label>
+        <div class="col-sm-8">
+            <a asp-controller="File"
+            asp-action="Get" 
+            asp-route-id="@Model.File.Id" class="btn btn-info" role="button" target="_blank">Link</a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Tags</label>
+        <div class="col-sm-8">
+            @foreach (var fileTag in Model.File.FileTag)
+            {
+                <a asp-controller="Tag"
+                   asp-action="Detail"
+                   asp-route-id="@fileTag.Tag.Name"
+                   class="btn btn-info">@fileTag.Tag.Name</a>
+            }
+        </div>
+    </div>
+</form>
+<div style="clear: both; border: 1px solid #cecece; margin-bottom: 3px; padding: 5px;">
+    <form action="/file/@Model.File.Id" method="post">
+        <input asp-for="@Model.File.Id" type="hidden" name="fileid" />
+        <div class="form-group row">
+            <label asp-for="@Model.File.Title" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-8">
+                <input name="filetitle" id="filetitle" type="text" value="@Model.File.Title" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-8">
+                <select asp-for="@Model.File.State" asp-items="@Model.FileStates" name="state" class="form-control"></select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tags</label>
+            <div class="col-sm-8">
+                <input name="tags" id="tags" type="text" value="@Model.Tags" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Document Date</label>
+            <div class="col-sm-2">
+                <input name="documentdate" id="documentdate" type="date" value="@Model.FileDate" class="form-control">
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="Speichern" class="btn btn-primary">
+        </div>
+    </form>
+</div>

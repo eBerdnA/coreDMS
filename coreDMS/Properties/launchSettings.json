@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "coreDMS": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "processed": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\processed",
+        "uploads": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\uploads",
+        "dbFile": "C:\\dev\\demoDotnetCore\\dev_database.sqlite",
+        "ASPNETCORE_ENVIRONMENT": "DEBUG"
+      }
+    }
+  }
+}

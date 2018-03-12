@@ -1,0 +1,35 @@
+﻿.body-content {
+    padding-top: 50px;
+}
+
+.tag-button {
+    border: 1px solid #000;
+    background: #ededed;
+    display: block;
+    float: left;
+    margin: 4px;
+    padding: 2px;
+    border-radius: 3px;
+    border: 1px solid #cccccc;
+}
+
+    .tag-button a {
+        color: #666666;
+    }
+
+.btnTagSearch a {
+    color: #fff;
+}
+
+.btnTagSearch, .btnTagSearchSel {
+    background: #fff;
+    float: left;
+    margin: 6px;
+    padding: 2px;
+    color: #666666;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+}

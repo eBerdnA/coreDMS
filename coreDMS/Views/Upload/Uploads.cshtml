@@ -1,0 +1,141 @@
+﻿@model CoreDMS.ViewModels.UploadsViewModel
+
+@{
+    ViewData["Title"] = "Uploads";
+}
+<h2>Uploads</h2>
+
+<table class="table">
+    @foreach (var file in Model.UploadedFiles)
+    {
+        <tr>
+            <td>
+                @file.FileName
+            </td>
+            <td>
+                <div class="process-section">
+                    <a class="process-link" href="/upload/process/@file.Id">Process</a>
+                    <div class="btn btn-primary process-confirm" style="display:none" data-process-id="">Confirm Process</div>
+                </div>
+            </td>
+            <td>
+                <div class="delete-section">
+                    <a class="delete-link" href="/upload/delete/@file.Id">Delete</a>
+                    <div class="btn btn-primary delete-confirm" style="display:none" data-delete-id="">Confirm Delete</div>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+<script type="text/javascript">
+    $(function () {
+        $("a.process-link").click(function (evt) {
+            var processLink = $(this);
+            processLink.hide();
+            var confirmButton = processLink.siblings(".process-confirm");
+            confirmButton.show();
+
+            var cancelProcess = function () {
+                removeEvents();
+                showProcessLink();
+            };
+
+            var processItem = function (evt) {
+                removeEvents();
+                confirmButton.hide();
+                $.post(
+                    evt.toElement.previousElementSibling.pathname)
+                    .done(function () {
+                        var parentRow = processLink.parents("tr:first");
+                        parentRow.fadeOut('fast', function () {
+                            parentRow.remove();
+                        });
+                    }).fail(function (data) {
+                        console.log(data.responseText);
+                        alert("Error - " + data.responseText);
+                    });
+                return false;
+            };
+
+            var removeEvents = function () {
+                confirmButton.off("click", processItem);
+                $(document).on("click", cancelProcess);
+                $(document).off("keypress", onKeyPress);
+            };
+
+            var showProcessLink = function () {
+                confirmButton.hide();
+                processLink.show();
+            };
+
+            var onKeyPress = function (e) {
+                //Cancel if escape key pressed
+                if (e.which == 27) {
+                    cancelProcess();
+                }
+            };
+
+            confirmButton.on("click", processItem);
+            $(document).on("click", cancelProcess);
+            $(document).on("keypress", onKeyPress);
+
+            return false;
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("a.delete-link").click(function (evt) {
+            //console.log(evt)
+            var deleteLink = $(this);
+            deleteLink.hide();
+            var confirmButton = deleteLink.siblings(".delete-confirm");
+            confirmButton.show();
+
+            var cancelDelete = function () {
+                removeEvents();
+                showDeleteLink();
+            };
+
+            var deleteItem = function (evt) {
+                removeEvents();
+                confirmButton.hide();
+                $.post(
+                    evt.toElement.previousElementSibling.pathname)
+                    .done(function () {
+                        var parentRow = deleteLink.parents("tr:first");
+                        parentRow.fadeOut('fast', function () {
+                            parentRow.remove();
+                        });
+                    }).fail(function (data) {
+                        alert("error");
+                    });
+                return false;
+            };
+
+            var removeEvents = function () {
+                confirmButton.off("click", deleteItem);
+                $(document).on("click", cancelDelete);
+                $(document).off("keypress", onKeyPress);
+            };
+
+            var showDeleteLink = function () {
+                confirmButton.hide();
+                deleteLink.show();
+            };
+
+            var onKeyPress = function (e) {
+                //Cancel if escape key pressed
+                if (e.which == 27) {
+                    cancelDelete();
+                }
+            };
+
+            confirmButton.on("click", deleteItem);
+            $(document).on("click", cancelDelete);
+            $(document).on("keypress", onKeyPress);
+
+            return false;
+        });
+    });
+</script>

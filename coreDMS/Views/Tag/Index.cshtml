@@ -1,0 +1,23 @@
+﻿@model IEnumerable<CoreDMS.Model.Tag>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Tags</h2>
+<table class="table table-hover">
+    <tr>
+        <th>Tag</th>
+        <th>File count</th>
+    </tr>
+    @foreach (var tag in Model)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Tag" asp-action="Detail" asp-route-id="@tag.Name" class="btn btn-info">@tag.Name</a>
+            </td>
+            <td>
+                <div style="display:inline;">@tag.FileTag.Count</div>
+            </td>
+        </tr>
+    }
+</table>
