@@ -11,9 +11,8 @@
 
 Directories for uploaded and processed files must be created manually before starting the application.
 
-	set dbFile="C:\dev\demoDotnetCore\dev_database.sqlite"
-	set uploads=C:\dev\coreDMS\coreDMS\bin\Release\netcoreapp2.0\publish\wwwroot\uploads
-	set processed=C:\dev\coreDMS\coreDMS\bin\Release\netcoreapp2.0\publish\wwwroot\processed
+Create a copy of `appsettings.template.json` and it `appsettings.json` and adjust the values according to environment.
+	
 	dotnet CoreDMS.dll
 
 # Running as Windows service
