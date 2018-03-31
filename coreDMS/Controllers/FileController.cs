@@ -229,7 +229,7 @@ namespace CoreDMS.Controllers
                 System.IO.File.Delete(file.Location);
                 _dmsContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _dmsContext.Database.RollbackTransaction();
                 return BadRequest();
