@@ -18,13 +18,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
+    <Content Include="wwwroot/**" />
+    <Content Include="Views\**" />
+    <Content Remove="wwwroot/processed/**" />
+    <Content Remove="wwwroot/uploads/**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="Views/**" CopyToPublishDirectory="PreserveNewest" />
-    <Content Remove="wwwroot/processed/**" />
-    <Content Remove="wwwroot/uploads/**" />
+    <None Remove="appsettings.template.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.template.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Views\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

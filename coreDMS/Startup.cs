@@ -18,16 +18,23 @@ namespace CoreDMS
             Configuration = configuration;
         }
 
+        public Startup(IHostingEnvironment env)
+        {
+        }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var uploads = Configuration.GetValue<string>("uploads");
+            var processed = Configuration.GetValue<string>("processed");
+            var connection = Configuration.GetValue<string>("dbFile");
+
             services.AddMvc();
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<ISettings>(new Settings(Environment.GetEnvironmentVariable("uploads"), Environment.GetEnvironmentVariable("processed")));
-            var connection = Environment.GetEnvironmentVariable("dbFile");
+            services.AddSingleton<ISettings>(new Settings(uploads, processed));
             if (string.IsNullOrEmpty(connection))
             {
                 connection = @"Datasource=db.sqlite";
