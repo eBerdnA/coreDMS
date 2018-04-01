@@ -48,7 +48,7 @@ namespace CoreDMS.Controllers
         {
             if (file.Length > 0)
             {
-                var filename = Path.Combine(uploadPath, file.FileName);
+                var filename = Helpers.Uploads.CreateLocationPath(uploadPath, file.FileName);
                 try
                 {                    
                     using (var fileStream = new FileStream(filename, FileMode.Create))
@@ -120,7 +120,7 @@ namespace CoreDMS.Controllers
             string fileProcessTime = processTime.ToString(Constants.FileProcessTimeDateFormat);
             try
             {
-                string targetFileName = processedPath + @"\" + fileProcessTime + "_" + upload.FileName;
+                string targetFileName = Helpers.Uploads.CreateProcessedLocation(processedPath, fileProcessTime, upload.FileName);
                 System.IO.File.Move(upload.Path, targetFileName);
                 _dmsContext.Files.Add(new Files
                 {
