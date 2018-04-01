@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coreDMS.Model\coreDMS.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="wwwroot/**" />
     <Content Include="Views\**" />
     <Content Remove="wwwroot/processed/**" />
@@ -32,6 +28,10 @@
     <Content Include="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreDMS.Model\CoreDMS.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
