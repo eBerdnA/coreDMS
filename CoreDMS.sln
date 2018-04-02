@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{77BD5A66-461
 		sql\004-FileTag.sql = sql\004-FileTag.sql
 		sql\005-Uploads.sql = sql\005-Uploads.sql
 		sql\006-UploadErrors.sql = sql\006-UploadErrors.sql
+		sql\007-Files-Note.sql = sql\007-Files-Note.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A65E2326-01F5-46B7-97F6-7FD193DC3F5D}"

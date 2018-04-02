@@ -18,7 +18,9 @@ namespace CoreDMS
             Console.WriteLine($"executionDir: {executionDir}");
 #endif
             var builder = new ConfigurationBuilder()
+#if (DEBUG == false)
                 .SetBasePath(executionDir)
+#endif
                 .AddJsonFile("appsettings.json");
             var config = builder.Build();
 

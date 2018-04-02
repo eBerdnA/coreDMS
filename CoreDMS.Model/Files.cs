@@ -19,6 +19,7 @@ namespace CoreDMS.Model
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
         public string Title { get; set; }
+        public string Note { get; set; }
 
         public ICollection<FileTag> FileTag { get; set; }
     }
