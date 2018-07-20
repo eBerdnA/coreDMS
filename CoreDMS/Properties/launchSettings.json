@@ -6,6 +6,11 @@
         "processed": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\processed",
         "uploads": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\uploads",
         "dbFile": "C:\\dev\\demoDotnetCore\\dev_database.sqlite",
+        "COREDMS_Uploads": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\uploads",
+        "COREDMS_DbFile": "C:\\dev\\demoDotnetCore\\dev_database.sqlite",
+        "COREDMS_Processed": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\processed",
+        "COREDMS_Applicationurl": "http://localhost:5002",
+        "COREDMS_LogDir": "C:\\dev\\coreDMS\\coreDMS\\wwwroot\\processed",
         "ASPNETCORE_ENVIRONMENT": "DEBUG"
       }
     }
