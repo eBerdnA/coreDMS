@@ -21,7 +21,8 @@ namespace CoreDMS
 #if (DEBUG == false)
                 .SetBasePath(executionDir)
 #endif
-                .AddJsonFile("appsettings.json");
+                .AddEnvironmentVariables("COREDMS_");
+
             var config = builder.Build();
 
             BuildWebHost(args, config).Run();
@@ -30,7 +31,7 @@ namespace CoreDMS
 
         public static IWebHost BuildWebHost(string[] args, IConfigurationRoot config)
         {
-            var url = config.GetValue<string>("applicationurl");
+            var url = config.GetValue<string>(ConfigKeys.AppUrl);
             if (string.IsNullOrEmpty(url))
             {
                 url = "http://localhost:5000";

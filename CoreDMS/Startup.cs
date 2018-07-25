@@ -7,15 +7,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Serilog;
+using Serilog.Core;
 using System;
+using System.IO;
 
 namespace CoreDMS
 {
     public class Startup
     {
+        Logger logger;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var logDir = Configuration.GetValue<string>(ConfigKeys.LogDir);
+
+            logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(logDir, "consoleapp.log"))
+                .CreateLogger();
         }
 
         public Startup(IHostingEnvironment env)
@@ -27,9 +38,12 @@ namespace CoreDMS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var uploads = Configuration.GetValue<string>("uploads");
-            var processed = Configuration.GetValue<string>("processed");
-            var connection = Configuration.GetValue<string>("dbFile");
+            var uploads = Configuration.GetValue<string>(ConfigKeys.UploadsDir);
+            var processed = Configuration.GetValue<string>(ConfigKeys.ProcessedDir);
+            var connection = Configuration.GetValue<string>(ConfigKeys.DbFilePath);
+
+            logger.Information($"uploads: {uploads}");
+            logger.Information($"processed: {processed}");
 
             services.AddMvc();
             services.AddScoped<IViewRenderService, ViewRenderService>();
@@ -43,7 +57,7 @@ namespace CoreDMS
             {
                 connection = $"Datasource={connection}";
             }
-
+            logger.Information($"connection: {connection}");
             services.AddDbContext<DMSContext>(options =>
                 options.UseSqlite(connection)
             );
@@ -63,7 +77,7 @@ namespace CoreDMS
             }
 
             app.UseStaticFiles();
-
+            app.UseMiddleware<ReflectionTypeLoadExceptionLoggingMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

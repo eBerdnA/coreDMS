@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,7 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreDMS.Model\CoreDMS.Model.csproj" />
+    <ProjectReference Include="..\CoreDMS.Model\CoreDMS.Model.csproj">
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,5 +44,12 @@
     <Content Update="Views\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="node_modules/**" />
+    <Content Remove="node_modules/**" />
+    <EmbeddedResource Remove="node_modules/**" />
+    <None Remove="node_modules/**" />
   </ItemGroup>
 </Project>
