@@ -7,6 +7,7 @@ namespace CoreDMS.Model
     public partial class DMSContext : DbContext
     {
         public virtual DbSet<Files> Files { get; set; }
+        public virtual DbSet<DocumentFile> DocumentFiles { get; set; }
         public virtual DbSet<FileStates> FileStates { get; set; }
         public virtual DbSet<FileTag> FileTag { get; set; }
         public virtual DbSet<LogTable> LogTable { get; set; }
@@ -75,7 +76,31 @@ namespace CoreDMS.Model
                     .HasColumnType("DATETIME");
             });
 
-            modelBuilder.Entity<FileStates>(entity =>
+            modelBuilder.Entity<DocumentFile>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("VARCHAR(36)")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasColumnName("createdAt")
+                    .HasColumnType("DATETIME");
+
+                entity.Property(e => e.UpdatedAt)
+                    .IsRequired()
+                    .HasColumnName("updatedAt")
+                    .HasColumnType("DATETIME");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnName("title")
+                    .HasColumnType("VARCHAR(255)")
+                    .HasDefaultValueSql("`filename`");
+            });
+
+                modelBuilder.Entity<FileStates>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("id")

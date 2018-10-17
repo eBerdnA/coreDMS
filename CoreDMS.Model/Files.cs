@@ -22,5 +22,6 @@ namespace CoreDMS.Model
         public string Note { get; set; }
 
         public ICollection<FileTag> FileTag { get; set; }
+        public ICollection<DocumentFile> DocumentFiles { get; set; }
     }
 }
