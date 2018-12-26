@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CoreDMS.Model;
 using CoreDMS.Services;
@@ -32,6 +34,13 @@ namespace CoreDMS.Controllers
             var files = _dmsContext.Files.ToList();
             @ViewData["Sitetitle"] = "All";
             return View("Index", files);
+        }
+
+        public IActionResult About()
+        {            
+            @ViewData["Sitetitle"] = "About";
+            @ViewData["Version"] = typeof(Program).Assembly.GetName().Version;
+            return View();
         }
     }
 }

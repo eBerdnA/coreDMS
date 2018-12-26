@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -6,6 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>CoreDMS</AssemblyName>
     <RootNamespace>CoreDMS</RootNamespace>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.template.json" />
+    <None Remove="Views\Home\About.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
