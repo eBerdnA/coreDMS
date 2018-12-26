@@ -6,6 +6,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>CoreDMS</AssemblyName>
     <RootNamespace>CoreDMS</RootNamespace>
+    <Deterministic>False</Deterministic>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.template.json" />
+    <None Remove="Views\Home\About.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
