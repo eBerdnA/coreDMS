@@ -18,14 +18,12 @@
 
   <ItemGroup>
     <Content Include="wwwroot/**" />
-    <Content Include="Views\**" />
     <Content Remove="wwwroot/processed/**" />
     <Content Remove="wwwroot/uploads/**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="appsettings.template.json" />
-    <None Remove="Views\Home\About.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
