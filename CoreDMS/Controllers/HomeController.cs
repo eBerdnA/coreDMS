@@ -9,6 +9,7 @@ using CoreDMS.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CoreDMS.Controllers
 {
@@ -16,10 +17,12 @@ namespace CoreDMS.Controllers
     {
         DMSContext _dmsContext;
         ISettings _settings;
-        public HomeController(DMSContext dMSContext, ISettings settings)
+        Microsoft.Extensions.Logging.ILogger _logger;
+        public HomeController(DMSContext dMSContext, ISettings settings, ILogger<HomeController> logger)
         {
             _dmsContext = dMSContext;
             _settings = settings;
+            _logger = logger;
         }
         public IActionResult Index()
         {
@@ -39,7 +42,9 @@ namespace CoreDMS.Controllers
         public IActionResult About()
         {            
             @ViewData["Sitetitle"] = "About";
-            @ViewData["Version"] = typeof(Program).Assembly.GetName().Version;
+            Version version = typeof(Program).Assembly.GetName().Version;
+            @ViewData["Version"] = version;
+            _logger.LogInformation($"version: {version}");
             return View();
         }
     }

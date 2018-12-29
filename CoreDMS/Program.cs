@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -38,7 +39,10 @@ namespace CoreDMS
             }
             var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls(url)
+                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console())
+                .UseUrls(url)                
                 .Build();
             return host;
         }

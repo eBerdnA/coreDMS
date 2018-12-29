@@ -39,6 +39,12 @@ Afterwards the created files should be copied to the directory from where the se
 	.\nssm.exe set CoreDMS AppStdout C:\CoreDMS\service.log 
 	.\nssm.exe set CoreDMS AppStderr C:\CoreDMS\service.log
 
+	.\nssm.exe set CoreDMS AppEnvironmentExtra COREDMS_LogDir=C:\CoreDMS\logs\
+	.\nssm.exe set CoreDMS AppEnvironmentExtra COREDMS_Uploads=C:\DMS\upload\
+	.\nssm.exe set CoreDMS AppEnvironmentExtra COREDMS_Processed=C:\DMS\out\
+	.\nssm.exe set CoreDMS AppEnvironmentExtra COREDMS_DbFile=C:\DMS\dev_database.sqlite
+	.\nssm.exe set CoreDMS AppEnvironmentExtra COREDMS_Applicationurl=http://192.168.178.204:3000
+
 ## Removing Windows
 
 	.\nssm.exe remove CoreDMS
