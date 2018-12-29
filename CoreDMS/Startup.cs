@@ -25,6 +25,8 @@ namespace CoreDMS
             var logDir = Configuration.GetValue<string>(ConfigKeys.LogDir);
 
             logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
                 .WriteTo.File(Path.Combine(logDir, "consoleapp.log"))
                 .CreateLogger();
         }
