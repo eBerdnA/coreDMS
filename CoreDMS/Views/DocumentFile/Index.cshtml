@@ -1,0 +1,24 @@
+﻿@model IEnumerable<CoreDMS.Model.DocumentFiles>
+
+@{
+    ViewData["Title"] = "DocumentFiles";
+}
+<h2>@ViewData["Sitetitle"]</h2>
+
+<div>
+    <a asp-controller="DocumentFile" 
+        asp-action="Create"
+        class="btn btn-info"
+        role="button">Create</a>
+</div>
+<table class="table">
+    <tr>
+        <th>Name</th>
+    </tr>
+    @foreach (var file in Model)
+    {
+        <tr>
+            <td><a asp-controller="DocumentFile" asp-action="Detail" asp-route-id="@file.Id">@file.Title</a></td>
+        </tr>
+    }
+

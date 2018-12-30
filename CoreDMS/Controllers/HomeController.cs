@@ -27,7 +27,15 @@ namespace CoreDMS.Controllers
         public IActionResult Index()
         {
             var idFileState = _dmsContext.FileStates.Where(s => s.Name == "new").FirstOrDefault();
-            var files = _dmsContext.Files.Where(f => f.State == idFileState.Id).ToList();
+            List<Files> files;
+            if (idFileState != null)
+            {
+                files = _dmsContext.Files.Where(f => f.State == idFileState.Id).ToList();
+            }
+            else
+            {
+                files = new List<Files>();
+            }
             @ViewData["Sitetitle"] = "Home";
             return View(files);
         }

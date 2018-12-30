@@ -1,0 +1,28 @@
+﻿@model CoreDMS.Model.DocumentFiles
+
+@{
+    ViewData["Title"] = "DocumentFiles";
+}
+<h2>@ViewData["Sitetitle"]</h2>
+
+<form asp-controller="DocumentFile"
+    asp-action="Create"
+    method="Post"
+    style="border: 1px solid #cecece; padding: 2px;  margin-bottom: 3px;">
+    <div class="form-group row">
+            <label asp-for="@Model.Title" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-8">
+                <input name="documentFileTitle" id="documentFileTitle" type="text" value="@Model.Title" class="form-control">
+            </div>
+    </div>
+    <div class="form-group row">
+            <label asp-for="@Model.Note" class="col-sm-2 col-form-label">Note</label>
+            <div class="col-sm-8">
+                <input name="documentFileNote" id="filetidocumentFileNotetle" type="text" value="@Model.Note" class="form-control">
+            </div>
+    </div>
+    <div>
+        <input type="submit" value="Speichern" class="btn btn-primary">
+    </div>
+</form>
+
