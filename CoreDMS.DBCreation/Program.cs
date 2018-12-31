@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Dapper;
+using System.Xml;
+using System.Reflection;
 
 namespace CoreDMS.DBCreation
 {
@@ -12,6 +15,16 @@ namespace CoreDMS.DBCreation
     {
         static void Main(string[] args)
         {
+            #region log4net
+            XmlDocument log4netConfig = new XmlDocument();
+            log4netConfig.Load(File.OpenRead("log4net.config"));
+            var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+            log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+            #endregion
+            var logger = log4net.LogManager.GetLogger(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+
             var app = new CommandLineApplication();
 
             app.HelpOption("-h|--help");
@@ -32,7 +45,7 @@ namespace CoreDMS.DBCreation
                     ? optionMessage2.Value()
                     : "";
 
-                Console.WriteLine($"DbFile: {DbFile}");
+                logger.Info($"DbFile: {DbFile}");
                 Console.WriteLine($"SqlFilePath: {SqlFilePath}");
                 BuildDb(DbFile, SqlFilePath);
                 return 0;
