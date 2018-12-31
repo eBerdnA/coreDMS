@@ -26,4 +26,71 @@
         <input type="submit" value="Aktualisieren" class="btn btn-primary">
     </div>
 </form>
+<div style="border: 1px solid #cecece; overflow: hidden; padding: 2px;">
+    <h4>FileId to add</h4>
+    <div>
+        <input type="text" id="fileid">
+    </div>
+    <button id="btn-AddFileId" type="button" class="btn btn-default" style="cursor: pointer">
+        Add
+    </button>
+</div>
+<div id="documentfile-result">
+</div>
 
+<script type="text/javascript">
+    $(function () {
+        $('#btn-AddFileId').click(function(evt){
+            $('#documentfile-result').empty();
+            var hashInput = $('#fileid').val();
+            var documentFileId = $('#Id').val();
+            var postData = {
+                documentId: hashInput,
+                documentFileId: documentFileId
+            };
+            console.log(postData);
+            $.ajax({
+                type: 'POST',
+                url: '/add/fileid',
+                data: JSON.stringify(postData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successAdd,
+                error: errorAdd
+            })
+        })
+
+        var successAdd = function(data) {
+            console.log(data);
+        };
+
+        var errorAdd = function(err) {
+            console.log(err);
+        };
+
+        var loadFiles = function (){
+            console.log('init');
+            var documentFileId = $('#Id').val();
+            $.ajax({
+                type: 'POST',
+                url: '/get/documentfileid',
+                data: JSON.stringify(documentFileId),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successLoad,
+                error: errorLoad
+            })
+        }
+
+        var successLoad = function (data) {
+            console.log('successLoad');
+            console.log(data);
+        };
+
+        var errorLoad = function() {
+            console.log('errorLoad');
+        };
+
+        loadFiles();
+    });
+</script>

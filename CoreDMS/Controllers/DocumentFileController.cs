@@ -69,5 +69,44 @@ namespace CoreDMS.Controllers
             _dmsContext.SaveChanges();
             return RedirectToAction("Detail", "DocumentFile", new { id = _documentFile.Id});
         }
+
+        [HttpPost("/add/fileid")]
+        public async Task<string> AddFileId([FromBody] PostData hash)
+        {
+            DocumentFileFile dff = new DocumentFileFile();
+            dff.FileId = hash.documentId;
+            dff.DocumentFileId = Convert.ToInt32(hash.documentFileId);
+            dff.CreatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
+            dff.UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
+            _dmsContext.Add(dff);
+            _dmsContext.SaveChanges();
+            return "done";
+        }
+
+        [HttpPost("/get/documentfileid")]
+        public async Task<IActionResult> GetDocumentFile([FromBody]int documentFileId)
+        {
+            var documentFile = _dmsContext.DocumentFiles
+                .Where(dff => dff.Id == documentFileId)
+                .Include(df => df.DocumentFileFiles)
+                .ThenInclude(dff => dff.File)
+                .FirstOrDefault();
+
+            List<Files> fileIds = new List<Files>();
+            foreach(var file in documentFile.DocumentFileFiles)
+            {
+                
+                fileIds.Add(new Files{
+                    Filename = file.File.Filename
+                });
+            }
+            return Json(fileIds);
+        }
+    }
+
+    public class PostData
+    {
+        public string documentFileId { get; set; }
+        public string documentId { get; set; }
     }
 }
