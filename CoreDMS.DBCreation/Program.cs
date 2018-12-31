@@ -66,7 +66,7 @@ namespace CoreDMS.DBCreation
                     using (var db = new DbCreationContext(optionsBuilder.Options))
                     {
                         db.Database.EnsureCreated();
-                        RunScript(db, sqlFilesPath + "\\" + "000-LogTable.sql");
+                        RunScript(db, sqlFilesPath + Path.DirectorySeparatorChar + "000-LogTable.sql");
                         foreach (var file in sqlFiles)
                         {
                             RunScript(db, file);
@@ -86,11 +86,11 @@ namespace CoreDMS.DBCreation
 
         static void RunScript(DbCreationContext db, string filePath)
         {
-            var scrriptName = filePath.Substring(filePath.LastIndexOf("\\")+1);
-            var scriptOrder = int.Parse(scrriptName.Substring(0, 3));
+            var scriptName = filePath.Substring(filePath.LastIndexOf(Path.DirectorySeparatorChar)+1);
+            var scriptOrder = int.Parse(scriptName.Substring(0, 3));
             var command = File.ReadAllText(filePath);
             db.Database.ExecuteSqlCommand(command);
-            var cmd = string.Format("INSERT INTO LogTable (ScriptOrder, ScriptName, createdAt) VALUES ({0}, '{1}', '{2}');", scriptOrder, scrriptName, DateTime.UtcNow.ToString());
+            var cmd = string.Format("INSERT INTO LogTable (ScriptOrder, ScriptName, createdAt) VALUES ({0}, '{1}', '{2}');", scriptOrder, scriptName, DateTime.UtcNow.ToString());
             db.Database.ExecuteSqlCommand(cmd);
         }
     }

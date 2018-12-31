@@ -1,7 +1,14 @@
 # Scaffolding database
 
-	cd \coreDMS.DBCreation
-	dotnet run -- -s C:\dev\coreDMS\sql -f C:\dev\coreDMS\coreDMS.DBCreation\DMS.db
+## Windows
+
+	cd \CoreDMS.DBCreation
+	dotnet run -- -s C:\dev\CoreDMS\sql -f C:\dev\CoreDMS\CoreDMS.DBCreation\DMS.db
+
+## Mac/*nix
+
+	cd \CoreDMS.DBCreation
+	dotnet run -- -s /mydev/CoreDMS/sql -f /mydev/CoreDMS/CoreDMS.DBCreation/DMS.db
 
 # Building application
 
