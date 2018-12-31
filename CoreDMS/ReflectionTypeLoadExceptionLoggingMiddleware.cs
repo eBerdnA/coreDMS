@@ -14,12 +14,10 @@ namespace CoreDMS
     public class ReflectionTypeLoadExceptionLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly Microsoft.Extensions.Logging.ILogger _logger;
         Logger logger;
         public ReflectionTypeLoadExceptionLoggingMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
-            //_logger = loggerFactory.CreateLogger<ReflectionTypeLoadExceptionLoggingMiddleware>();
             var logDir = configuration.GetValue<string>(ConfigKeys.LogDir);
             logger = new LoggerConfiguration()
                 .WriteTo.File(Path.Combine(logDir, "consoleapp.log"))

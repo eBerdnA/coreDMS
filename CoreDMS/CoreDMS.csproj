@@ -10,7 +10,6 @@
     <NoWarn>NU1605</NoWarn>
     <RuntimeIdentifiers>win10-x64;osx-x64;ubuntu.18.04-x64</RuntimeIdentifiers>
     <Deterministic>False</Deterministic>
-    <AssemblyVersion>1.0.*</AssemblyVersion>
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
 

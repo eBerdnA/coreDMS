@@ -12,7 +12,7 @@
 
 # Building application
 
-	dotnet publish --configuration Release
+	dotnet publish --configuration Release /p:AssemblyVersion:<insert version here>
 
 # Starting application
 
