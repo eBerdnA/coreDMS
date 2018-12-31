@@ -5,6 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Xml;
+using System.Reflection;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace CoreDMS.DBCreation
 {
@@ -12,6 +17,16 @@ namespace CoreDMS.DBCreation
     {
         static void Main(string[] args)
         {
+            #region log4net
+            XmlDocument log4netConfig = new XmlDocument();
+            log4netConfig.Load(File.OpenRead("log4net.config"));
+            var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+            log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+            #endregion
+            var logger = log4net.LogManager.GetLogger(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+
             var app = new CommandLineApplication();
 
             app.HelpOption("-h|--help");
@@ -32,26 +47,31 @@ namespace CoreDMS.DBCreation
                     ? optionMessage2.Value()
                     : "";
 
-                Console.WriteLine($"DbFile: {DbFile}");
-                Console.WriteLine($"SqlFilePath: {SqlFilePath}");
+                logger.Info($"DbFile: {DbFile}");
+                logger.Info($"SqlFilePath: {SqlFilePath}");
                 BuildDb(DbFile, SqlFilePath);
                 return 0;
             });
 
             app.Execute(args);
 
-            Console.WriteLine("done");
-            Console.WriteLine("Press any key to exit");
+            logger.Info("done");
+            logger.Info("Press any key to exit");
             Console.ReadKey();
         }
 
         static void BuildDb(string dbfile, string sqlFilesPath)
         {
+            var logger = log4net.LogManager.GetLogger(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+
             Console.WriteLine("Creating database");
             var currentDir = System.Environment.CurrentDirectory;
             Console.WriteLine($"current directory: {currentDir}");
-            Console.WriteLine($"Checking existence of {dbfile}: {File.Exists(dbfile)}");
-            if (!File.Exists(dbfile))
+            var dbExists = File.Exists(dbfile);
+            Console.WriteLine($"Checking existence of {dbfile}: {dbExists}");
+            // if (dbExists)
+            if (true)
             {
                 if (Directory.Exists(sqlFilesPath))
                 {
@@ -65,11 +85,21 @@ namespace CoreDMS.DBCreation
                     optionsBuilder.UseSqlite($"Data Source={dbfile}");
                     using (var db = new DbCreationContext(optionsBuilder.Options))
                     {
-                        db.Database.EnsureCreated();
-                        RunScript(db, sqlFilesPath + "\\" + "000-LogTable.sql");
+                        if (!dbExists)
+                        {
+                            db.Database.EnsureCreated();
+                            var sqlFile = new SqlFile(sqlFilesPath + Path.DirectorySeparatorChar + "000-LogTable.sql");
+                            RunScript(db, sqlFile);
+                        }
+                        logger.Debug($"looking for sql files in '{sqlFilesPath}'");
+                        List<SqlFile> sqlFileList = new List<SqlFile>();
                         foreach (var file in sqlFiles)
                         {
-                            RunScript(db, file);
+                            sqlFileList.Add(new SqlFile(file));
+                        }
+                        foreach (var sqlFile in sqlFileList.OrderBy(s => s.Order))
+                        {
+                            RunScript(db, sqlFile);
                         }
                     }
                 }
@@ -84,14 +114,29 @@ namespace CoreDMS.DBCreation
             }
         }
 
-        static void RunScript(DbCreationContext db, string filePath)
+        static void RunScript(DbCreationContext db, SqlFile sqlFile)
         {
-            var scrriptName = filePath.Substring(filePath.LastIndexOf("\\")+1);
-            var scriptOrder = int.Parse(scrriptName.Substring(0, 3));
-            var command = File.ReadAllText(filePath);
-            db.Database.ExecuteSqlCommand(command);
-            var cmd = string.Format("INSERT INTO LogTable (ScriptOrder, ScriptName, createdAt) VALUES ({0}, '{1}', '{2}');", scriptOrder, scrriptName, DateTime.UtcNow.ToString());
-            db.Database.ExecuteSqlCommand(cmd);
+            var logger = log4net.LogManager.GetLogger(Assembly.GetEntryAssembly(),
+               typeof(log4net.Repository.Hierarchy.Hierarchy));
+            logger.Debug($"checking script '{sqlFile.FilePath}'");
+            logger.Debug($"scriptname: '{sqlFile.FileName}'");
+            
+            int checkResult = 0;
+            checkResult = db.LogTable.Where(l => l.ScriptName == sqlFile.FileName).Count();
+
+            logger.Debug($"checkResult: {checkResult}");
+            if (checkResult == 0)
+            {
+                var command = File.ReadAllText(sqlFile.FilePath);
+                db.Database.ExecuteSqlCommand(command);
+                string sqlInsert = "INSERT INTO LogTable (ScriptOrder, ScriptName, createdAt) VALUES ({0}, '{1}', '{2}');";
+                var cmd = string.Format(sqlInsert, sqlFile.Order, sqlFile.FileName, DateTime.UtcNow.ToString());
+                db.Database.ExecuteSqlCommand(cmd);
+            }
+            else
+            {
+                logger.Info($"script '{sqlFile.Order}' has been already installed");
+            }
         }
     }
 }
