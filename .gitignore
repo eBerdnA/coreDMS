@@ -262,3 +262,5 @@ __pycache__/
 
 *.db
 CoreDMS/appsettings.json
+.vscode/
+.DS_Store
