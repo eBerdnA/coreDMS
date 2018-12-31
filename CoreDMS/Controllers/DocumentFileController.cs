@@ -38,12 +38,12 @@ namespace CoreDMS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string documentFileTitle, string documentFileNote)
+        public IActionResult Create([FromForm]DocumentFiles _documentFile)
         {
             DocumentFiles documentFile = new DocumentFiles
             {
-                Title = documentFileTitle,
-                Note = documentFileNote,
+                Title = _documentFile.Title,
+                Note = _documentFile.Note,
                 CreatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat),
                 UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat)
             };
@@ -60,13 +60,14 @@ namespace CoreDMS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Detail(string id, string documentFileTitle, string documentFileNote)
+        public IActionResult Detail([FromForm]DocumentFiles _documentFile)
         {
-            var documentFile = _dmsContext.DocumentFiles.Where(d => d.Id == Convert.ToInt32(id)).FirstOrDefault();
-            documentFile.Title = documentFileTitle;
-            documentFile.Note = documentFileNote;
+            var documentFile = _dmsContext.DocumentFiles.Where(d => d.Id == Convert.ToInt32(_documentFile.Id)).FirstOrDefault();
+            documentFile.Title = _documentFile.Title;
+            documentFile.Note = _documentFile.Note;
+            documentFile.UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
             _dmsContext.SaveChanges();
-            return RedirectToAction("Detail", "DocumentFile", new { id = id});
+            return RedirectToAction("Detail", "DocumentFile", new { id = _documentFile.Id});
         }
     }
 }

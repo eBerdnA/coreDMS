@@ -14,11 +14,15 @@
 <table class="table">
     <tr>
         <th>Name</th>
+        <th>Created</th>
+        <th>Updated</th>
     </tr>
     @foreach (var file in Model)
     {
         <tr>
             <td><a asp-controller="DocumentFile" asp-action="Detail" asp-route-id="@file.Id">@file.Title</a></td>
+            <td dt-value="@file.CreatedAt" dt-format="dd.MM.yyyy HH:mm:ss"></td>
+            <td dt-value="@file.UpdatedAt" dt-format="dd.MM.yyyy HH:mm:ss"></td>
         </tr>
     }
 
