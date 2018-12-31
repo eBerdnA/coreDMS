@@ -8,6 +8,7 @@ namespace CoreDMS.Model
     {
         public virtual DbSet<Files> Files { get; set; }
         public virtual DbSet<DocumentFiles> DocumentFiles { get; set; }
+        public virtual DbSet<DocumentFileFile> DocumentFileFiles { get; set; }
         public virtual DbSet<FileStates> FileStates { get; set; }
         public virtual DbSet<FileTag> FileTag { get; set; }
         public virtual DbSet<LogTable> LogTable { get; set; }
@@ -120,6 +121,8 @@ namespace CoreDMS.Model
                     .HasColumnType("DATETIME");
             });
 
+            modelBuilder.Entity<DocumentFileFile>()
+            .ToTable("DocumentFileFile");
             modelBuilder.Entity<DocumentFileFile>(entity => {
                 #region properties
                 entity.Property(e => e.Id)
