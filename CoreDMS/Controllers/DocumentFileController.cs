@@ -71,7 +71,7 @@ namespace CoreDMS.Controllers
         }
 
         [HttpPost("/add/fileid")]
-        public async Task<string> AddFileId([FromBody] PostData hash)
+        public string AddFileId([FromBody] PostData hash)
         {
             DocumentFileFile dff = new DocumentFileFile();
             dff.FileId = hash.documentId;
@@ -84,7 +84,7 @@ namespace CoreDMS.Controllers
         }
 
         [HttpPost("/get/documentfileid")]
-        public async Task<IActionResult> GetDocumentFile([FromBody]int documentFileId)
+        public IActionResult GetDocumentFile([FromBody]int documentFileId)
         {
             var documentFile = _dmsContext.DocumentFiles
                 .Where(dff => dff.Id == documentFileId)
