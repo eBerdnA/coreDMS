@@ -70,47 +70,39 @@ namespace CoreDMS.DBCreation
             Console.WriteLine($"current directory: {currentDir}");
             var dbExists = File.Exists(dbfile);
             Console.WriteLine($"Checking existence of {dbfile}: {dbExists}");
-            // if (dbExists)
-            if (true)
+            if (Directory.Exists(sqlFilesPath))
             {
-                if (Directory.Exists(sqlFilesPath))
+                var sqlFiles = Directory.GetFiles(sqlFilesPath, "*.sql").Where(name => !name.EndsWith("000-LogTable.sql", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                if (sqlFiles.Length == 0)
                 {
-                    var sqlFiles = Directory.GetFiles(sqlFilesPath, "*.sql").Where(name => !name.EndsWith("000-LogTable.sql", StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                    if (sqlFiles.Length == 0)
-                    {
-                        Console.WriteLine("no sql files found, therefore doing nothing");
-                        return;
-                    }
-                    var optionsBuilder = new DbContextOptionsBuilder<DbCreationContext>();
-                    optionsBuilder.UseSqlite($"Data Source={dbfile}");
-                    using (var db = new DbCreationContext(optionsBuilder.Options))
-                    {
-                        if (!dbExists)
-                        {
-                            db.Database.EnsureCreated();
-                            var sqlFile = new SqlFile(sqlFilesPath + Path.DirectorySeparatorChar + "000-LogTable.sql");
-                            RunScript(db, sqlFile);
-                        }
-                        logger.Debug($"looking for sql files in '{sqlFilesPath}'");
-                        List<SqlFile> sqlFileList = new List<SqlFile>();
-                        foreach (var file in sqlFiles)
-                        {
-                            sqlFileList.Add(new SqlFile(file));
-                        }
-                        foreach (var sqlFile in sqlFileList.OrderBy(s => s.Order))
-                        {
-                            RunScript(db, sqlFile);
-                        }
-                    }
+                    Console.WriteLine("no sql files found, therefore doing nothing");
+                    return;
                 }
-                else
+                var optionsBuilder = new DbContextOptionsBuilder<DbCreationContext>();
+                optionsBuilder.UseSqlite($"Data Source={dbfile}");
+                using (var db = new DbCreationContext(optionsBuilder.Options))
                 {
-                    Console.WriteLine($"'{sqlFilesPath}' does not exist");
+                    if (!dbExists)
+                    {
+                        db.Database.EnsureCreated();
+                        var sqlFile = new SqlFile(sqlFilesPath + Path.DirectorySeparatorChar + "000-LogTable.sql");
+                        RunScript(db, sqlFile);
+                    }
+                    logger.Debug($"looking for sql files in '{sqlFilesPath}'");
+                    List<SqlFile> sqlFileList = new List<SqlFile>();
+                    foreach (var file in sqlFiles)
+                    {
+                        sqlFileList.Add(new SqlFile(file));
+                    }
+                    foreach (var sqlFile in sqlFileList.OrderBy(s => s.Order))
+                    {
+                        RunScript(db, sqlFile);
+                    }
                 }
             }
             else
             {
-                Console.WriteLine("db file already exists, therefore doing nothing");
+                Console.WriteLine($"'{sqlFilesPath}' does not exist");
             }
         }
 
