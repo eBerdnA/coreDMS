@@ -5,6 +5,14 @@
 }
 <h2>@ViewData["Sitetitle"]</h2>
 
+@section Scripts {
+    <script type="text/javascript" src="~/ClientApp/runtime.js"></script>
+    <script type="text/javascript" src="~/ClientApp/polyfills.js"></script>
+    <script type="text/javascript" src="~/ClientApp/styles.js"></script>
+    <script type="text/javascript" src="~/ClientApp/vendor.js"></script>
+    <script type="text/javascript" src="~/ClientApp/main.js"></script>
+}
+
 <form asp-controller="DocumentFile"
     asp-action="Detail"
     method="Post"
@@ -37,7 +45,7 @@
 </div>
 <div id="documentfile-result">
 </div>
-
+<app-documentfile input="@Model.Id"></app-documentfile>
 <script type="text/javascript">
     $(function () {
         $('#btn-AddFileId').click(function(evt){
@@ -91,6 +99,6 @@
             console.log('errorLoad');
         };
 
-        loadFiles();
+        //loadFiles();
     });
 </script>

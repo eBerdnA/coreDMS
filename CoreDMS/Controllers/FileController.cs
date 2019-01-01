@@ -141,6 +141,14 @@ namespace CoreDMS.Controllers
         [HttpGet("/file/{id}")]
         public IActionResult Index(string id)
         {
+            try
+            {
+                new Guid(id);
+            }
+            catch
+            {
+                return StatusCode(500, "invalid file id");
+            }
             Files file = _dmsContext.Files
                 .Include(f => f.FileTag)
                     .ThenInclude(filetag => filetag.Tag)
@@ -150,8 +158,11 @@ namespace CoreDMS.Controllers
             {
                 File = file
             };
+            if (model.Tags == null)
+            {
+                model.Tags = string.Empty;
+            }
             model.Tags = BuildTagString(file.FileTag);
-
             List<FileStates> states = _dmsContext.FileStates.ToList();
             model.FileStates = new List<SelectListItem>();
             foreach (FileStates state in states)

@@ -1,0 +1,17 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Hash</th>
+            <th>Document Date</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let df of dfList">
+            <td><a href="/file/{{df.id}}" target="_blank">{{df.filename}}</a></td>
+            <td>{{df.hash}}</td>
+            <td>{{df.documentDate}}</td>            
+        </tr>        
+    </tbody>
+</table>

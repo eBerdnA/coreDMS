@@ -54,7 +54,16 @@ namespace CoreDMS.Controllers
 
         public IActionResult Detail(string id)
         {
-            int documentFileId = Convert.ToInt32(id);
+            int? documentFileId = null;
+            try
+            {
+                documentFileId = Convert.ToInt32(id);
+            }
+            catch {}
+            if (documentFileId == null | documentFileId == 0)
+            {
+                return NotFound();
+            }
             var documentFile = _dmsContext.DocumentFiles.Where(d => d.Id == documentFileId).FirstOrDefault();
             return View(documentFile);
         }
@@ -86,6 +95,10 @@ namespace CoreDMS.Controllers
         [HttpPost("/get/documentfileid")]
         public IActionResult GetDocumentFile([FromBody]int documentFileId)
         {
+            if (documentFileId == null | documentFileId == 0)
+            {
+                return NotFound("DocumentFileId not found");
+            }
             var documentFile = _dmsContext.DocumentFiles
                 .Where(dff => dff.Id == documentFileId)
                 .Include(df => df.DocumentFileFiles)
@@ -97,11 +110,18 @@ namespace CoreDMS.Controllers
             {
                 
                 fileIds.Add(new Files{
-                    Filename = file.File.Filename
+                    Filename = file.File.Filename,
+                    Hash = file.File.Hash,
+                    CreatedAt = file.File.CreatedAt,
+                    UpdatedAt = file.File.UpdatedAt,
+                    DocumentDate = file.File.DocumentDate,
+                    Id = file.File.Id
                 });
             }
             return Json(fileIds);
         }
+
+        
     }
 
     public class PostData
