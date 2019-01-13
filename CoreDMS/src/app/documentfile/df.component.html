@@ -1,9 +1,29 @@
+<form #heroForm="ngForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+        <label for="documentid">Document ID</label>
+        <input type="text" class="form-control" id="documentid"
+               required
+               [(ngModel)]="model.documentid" name="documentid"
+               #name="ngModel">
+        <!-- <div [hidden]="documentid.valid || documentid.pristine"
+             class="alert alert-danger">
+            Document ID
+        </div> -->
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+
+  </form>
+  <span class="error" ng-show="error" ng-cloak> {{error}}</span>
+
 <table class="table table-hover">
     <thead>
         <tr>
             <th>Filename</th>
             <th>Hash</th>
             <th>Document Date</th>
+            <th></th>
             
         </tr>
     </thead>
@@ -11,7 +31,8 @@
         <tr *ngFor="let df of dfList">
             <td><a href="/file/{{df.id}}" target="_blank">{{df.filename}}</a></td>
             <td>{{df.hash}}</td>
-            <td>{{df.documentDate}}</td>            
+            <td>{{df.documentDate}}</td>  
+            <td><button (click)="delete(df.id)">Delete</button></td>          
         </tr>        
     </tbody>
 </table>

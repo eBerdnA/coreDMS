@@ -4,17 +4,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 
 import { DfComponent } from './documentfile/df.component';
+import { DfFormComponent } from './documentfile/dfform.component';
+
+import { FormsModule }   from '@angular/forms';
 
 @NgModule({
   declarations: [
     // AppComponent,
-    DfComponent
+    DfComponent,
+    DfFormComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
-  bootstrap: [DfComponent]
+  bootstrap: [DfComponent, DfFormComponent]
 })
 export class AppModule { }

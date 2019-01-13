@@ -79,6 +79,57 @@ namespace CoreDMS.Controllers
             return RedirectToAction("Detail", "DocumentFile", new { id = _documentFile.Id});
         }
 
+        public class AddingDocumentFile
+        {
+            public string documentid { get; set;}
+            public string fileid{ get; set; }
+        }
+
+        [HttpPost("/remove/documentfileid")]
+        public IActionResult RemoveDocumentFile([FromBody] AddingDocumentFile values)
+        {
+            var checkResult = _dmsContext.DocumentFileFiles.Where(d => d.FileId == values.fileid && d.DocumentFileId == Convert.ToInt32(values.documentid)).FirstOrDefault();
+            if (checkResult == null)
+            {
+                return NotFound();
+            }
+            _dmsContext.Remove(checkResult);
+            try
+            {
+                _dmsContext.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            return Ok();
+        }
+
+        [HttpPost("/add/documentfileid")]
+        public IActionResult AddDocumentFile([FromBody] AddingDocumentFile values)
+        {
+            var checkResult = _dmsContext.DocumentFileFiles.Where(d => d.FileId == values.fileid).FirstOrDefault();            
+            if (checkResult != null)
+            {
+                return StatusCode(500,"Document already in file");
+            }
+            DocumentFileFile dff = new DocumentFileFile();
+            dff.FileId = values.fileid;
+            dff.DocumentFileId = Convert.ToInt32(values.documentid);
+            dff.CreatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
+            dff.UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
+            _dmsContext.Add(dff);
+            try
+            {
+                _dmsContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            return Ok();
+        }
+
         [HttpPost("/add/fileid")]
         public string AddFileId([FromBody] PostData hash)
         {

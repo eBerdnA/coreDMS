@@ -34,17 +34,9 @@
         <input type="submit" value="Aktualisieren" class="btn btn-primary">
     </div>
 </form>
-<div style="border: 1px solid #cecece; overflow: hidden; padding: 2px;">
-    <h4>FileId to add</h4>
-    <div>
-        <input type="text" id="fileid">
-    </div>
-    <button id="btn-AddFileId" type="button" class="btn btn-default" style="cursor: pointer">
-        Add
-    </button>
-</div>
 <div id="documentfile-result">
 </div>
+<app-documentfileform></app-documentfileform>
 <app-documentfile input="@Model.Id"></app-documentfile>
 <script type="text/javascript">
     $(function () {

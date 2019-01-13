@@ -265,3 +265,4 @@ CoreDMS/appsettings.json
 .vscode/
 .DS_Store
 CoreDMS/wwwroot/ClientApp/**
+package-lock.json
