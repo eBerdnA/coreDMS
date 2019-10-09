@@ -1,20 +1,25 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
 import { HttpClientModule } from '@angular/common/http'; 
 import { AppComponent } from './app.component';
 
 import { DfComponent } from './documentfile/df.component';
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DemoMaterialModule} from './material-module';
+
 @NgModule({
-  declarations: [
-    // AppComponent,
-    DfComponent
-  ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    DemoMaterialModule,
   ],
+  declarations: [
+    DfComponent
+  ],
+  bootstrap: [DfComponent],
   providers: [],
-  bootstrap: [DfComponent]
 })
 export class AppModule { }
