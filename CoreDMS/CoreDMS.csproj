@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>CoreDMS</AssemblyName>
     <RootNamespace>CoreDMS</RootNamespace>
     <!-- https://github.com/dotnet/core/issues/907#issuecomment-326092990 -->
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <!-- <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" /> -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
@@ -22,19 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot/**" />
+    <None Include="wwwroot/**" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Remove="wwwroot/processed/**" />
     <Content Remove="wwwroot/uploads/**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.template.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,16 +35,11 @@
     </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="wwwroot/**/*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
+  <!-- <ItemGroup>
     <Content Include="Views/**/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
+  </ItemGroup> -->
 
   <ItemGroup>
     <Compile Remove="node_modules/**" />
