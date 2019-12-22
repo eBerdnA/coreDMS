@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>CoreDMS.DBCreation</AssemblyName>
     <RootNamespace>CoreDMS.DBCreation</RootNamespace>
     <!-- https://github.com/dotnet/core/issues/907#issuecomment-326092990 -->

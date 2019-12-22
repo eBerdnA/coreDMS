@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -31,7 +32,7 @@ namespace CoreDMS
                 .CreateLogger();
         }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostEnvironment env)
         {
         }
 
@@ -43,11 +44,11 @@ namespace CoreDMS
             var uploads = Configuration.GetValue<string>(ConfigKeys.UploadsDir);
             var processed = Configuration.GetValue<string>(ConfigKeys.ProcessedDir);
             var connection = Configuration.GetValue<string>(ConfigKeys.DbFilePath);
-
+            System.Console.WriteLine(connection);
             logger.Information($"uploads: {uploads}");
             logger.Information($"processed: {processed}");
 
-            services.AddMvc();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ISettings>(new Settings(uploads, processed));
@@ -67,7 +68,7 @@ namespace CoreDMS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
