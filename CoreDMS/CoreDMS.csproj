@@ -35,16 +35,23 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!-- <ItemGroup>
-    <Content Include="Views/**/*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup> -->
-
   <ItemGroup>
     <Compile Remove="node_modules/**" />
     <Content Remove="node_modules/**" />
     <EmbeddedResource Remove="node_modules/**" />
     <None Remove="node_modules/**" />
   </ItemGroup>
+
+  <Target Name="GitCommit" BeforeTargets="BeforeBuild">
+    <!-- StandardOutputImportance must be used instead of EchoOff, see -->
+    <!-- https://github.com/Microsoft/msbuild/issues/2826 -->
+    <Exec Command="git rev-parse --verify HEAD" ConsoleToMsBuild="true" StandardOutputImportance="Low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="CommitHash" />
+    </Exec>
+    <Message Importance="high" Text="CommitHash: $(CommitHash)" />
+    <PropertyGroup>
+      <Description>Git commit - $(SourceLinkCommit)</Description>
+    </PropertyGroup>
+  </Target>
+
 </Project>
