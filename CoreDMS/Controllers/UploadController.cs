@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace CoreDMS.Controllers
 {
@@ -22,12 +23,12 @@ namespace CoreDMS.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISettings _settings;
-        private IHostingEnvironment _environment;
+        private IHostEnvironment _environment;
         string uploadPath = string.Empty;
         string processedPath = string.Empty;
 
         public UploadController(DMSContext dMSContext, IViewRenderService viewRenderService,
-            IHttpContextAccessor httpContextAccessor, ISettings settings, IHostingEnvironment environment)
+            IHttpContextAccessor httpContextAccessor, ISettings settings, IHostEnvironment environment)
         {
             _dmsContext = dMSContext;
             _viewRenderService = viewRenderService;

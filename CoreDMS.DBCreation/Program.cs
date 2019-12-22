@@ -86,7 +86,6 @@ namespace CoreDMS.DBCreation
                     {
                         db.Database.EnsureCreated();
                         var sqlFile = new SqlFile(sqlFilesPath + Path.DirectorySeparatorChar + "000-LogTable.sql");
-                        RunScript(db, sqlFile);
                     }
                     logger.Debug($"looking for sql files in '{sqlFilesPath}'");
                     List<SqlFile> sqlFileList = new List<SqlFile>();

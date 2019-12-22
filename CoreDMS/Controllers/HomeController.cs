@@ -51,7 +51,15 @@ namespace CoreDMS.Controllers
         {            
             @ViewData["Sitetitle"] = "About";
             Version version = typeof(Program).Assembly.GetName().Version;
+            AssemblyDescriptionAttribute attr = typeof(Program).Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
+            string description = string.Empty;
+            if(attr != null)
+            {
+                description = attr.Description;
+            }
+
             @ViewData["Version"] = version;
+            @ViewData["description"] = description;
             _logger.LogInformation($"version: {version}");
             return View();
         }

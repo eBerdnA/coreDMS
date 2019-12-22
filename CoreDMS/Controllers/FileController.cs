@@ -130,10 +130,12 @@ namespace CoreDMS.Controllers
         private List<string> SplitTags(string tags)
         {
             var splittedTags = new List<string>();
-            foreach (var tag in tags.Split(","))
+            if (!string.IsNullOrEmpty(tags))
             {
-                splittedTags.Add(tag.Trim());
-
+                foreach (var tag in tags.Split(","))
+                {
+                    splittedTags.Add(tag.Trim());
+                }
             }
             return splittedTags;
         }
