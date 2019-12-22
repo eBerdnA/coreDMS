@@ -13,6 +13,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: GitVersion@5
+  inputs:
+    runtime: 'core'
 - task: UseDotNet@2
   displayName: 'Install .NET Core sdk'
   inputs:
