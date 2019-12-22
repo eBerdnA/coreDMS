@@ -8,16 +8,31 @@ import { DfFormComponent } from './documentfile/dfform.component';
 
 import { FormsModule }   from '@angular/forms';
 
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DemoMaterialModule} from './material-module';
+import { ConfirmationDialogComponent } from './shared/delete-confirm-dialog/delete-confirm-dialog.component';
+
+
 @NgModule({
   declarations: [
     // AppComponent,
     DfComponent,
-    DfFormComponent
+    DfFormComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
+    MatDialogModule,
+    MatButtonModule,
+    DemoMaterialModule,
     FormsModule
+  ],
+  entryComponents: [
+    ConfirmationDialogComponent
   ],
   providers: [],
   bootstrap: [DfComponent, DfFormComponent]

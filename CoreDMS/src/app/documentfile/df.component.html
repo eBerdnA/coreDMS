@@ -17,22 +17,19 @@
   </form>
   <span class="error" ng-show="error" ng-cloak> {{error}}</span>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Filename</th>
-            <th>Hash</th>
-            <th>Document Date</th>
-            <th></th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let df of dfList">
-            <td><a href="/file/{{df.id}}" target="_blank">{{df.filename}}</a></td>
-            <td>{{df.hash}}</td>
-            <td>{{df.documentDate}}</td>  
-            <td><button (click)="delete(df.id)">Delete</button></td>          
-        </tr>        
-    </tbody>
+<table matSort (matSortChange)="sortData($event)" class="table table-hover">
+    <tr>
+        <th mat-sort-header="filename">Filename</th>
+        <th mat-sort-header="hash">Hash</th>
+        <th mat-sort-header="documentDate">Document Date</th>
+        <th></th>
+    </tr>
+
+    <tr *ngFor="let df of dfList">
+        <td><a href="/file/{{df.id}}" target="_blank">{{df.filename}}</a></td>
+        <td>{{df.hash}}</td>
+        <td>{{df.documentDate}}</td>
+        <button mat-button (click)="openDialog(df.id)">Delete</button>
+    </tr>
+
 </table>
