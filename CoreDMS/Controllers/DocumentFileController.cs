@@ -108,7 +108,8 @@ namespace CoreDMS.Controllers
         [HttpPost("/add/documentfileid")]
         public IActionResult AddDocumentFile([FromBody] AddingDocumentFile values)
         {
-            var checkResult = _dmsContext.DocumentFileFiles.Where(d => d.FileId == values.fileid).FirstOrDefault();            
+            int Documentid = Convert.ToInt32(values.documentid);
+            var checkResult = _dmsContext.DocumentFileFiles.Where(d => d.DocumentFileId == Documentid && d.FileId == values.fileid).FirstOrDefault();            
             if (checkResult != null)
             {
                 return StatusCode(500,"Document already in file");
