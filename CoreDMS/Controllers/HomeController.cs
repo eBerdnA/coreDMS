@@ -24,6 +24,22 @@ namespace CoreDMS.Controllers
             _settings = settings;
             _logger = logger;
         }
+
+        [Route("api/documents/new")]
+        public IActionResult New()
+        {
+            var idFileState = _dmsContext.FileStates.Where(s => s.Name == "new").FirstOrDefault();
+            List<Files> files;
+            if (idFileState != null)
+            {
+                files = _dmsContext.Files.Where(f => f.State == idFileState.Id).ToList();
+            }
+            else
+            {
+                files = new List<Files>();
+            }
+            return Ok(files);
+        }
         public IActionResult Index()
         {
             var idFileState = _dmsContext.FileStates.Where(s => s.Name == "new").FirstOrDefault();

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -48,7 +49,10 @@ namespace CoreDMS
             logger.Information($"uploads: {uploads}");
             logger.Information($"processed: {processed}");
 
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+                    .AddNewtonsoftJson(options =>
+                        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ISettings>(new Settings(uploads, processed));
@@ -81,11 +85,33 @@ namespace CoreDMS
 
             app.UseStaticFiles();
             app.UseMiddleware<ReflectionTypeLoadExceptionLoggingMiddleware>();
-            app.UseMvc(routes =>
+            // app.UseMvc(routes =>
+            // {
+            //     routes.MapRoute(
+            //         name: "default",
+            //         template: "{controller=Home}/{action=Index}/{id?}");                
+            // });
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    // spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
             });
         }
     }

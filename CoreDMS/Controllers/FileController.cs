@@ -31,6 +31,45 @@ namespace CoreDMS.Controllers
             _settings = settings;
         }
 
+        [HttpPost("api/document/{id}")]
+        public IActionResult Update([FromBody] UpdateDocument values)
+        {
+            var file = _dmsContext.Files
+                .Include(f => f.FileTag)
+                    .ThenInclude(ft => ft.Tag)
+                .Where(f => f.Id == values.documentId).FirstOrDefault();
+            file.Title = values.documentTitle;
+            file.State = Convert.ToInt32(values.documentState);
+            file.UpdatedAt = DateTime.UtcNow.ToString(Constants.DocumentDateFormat);
+            file.DocumentDate = values.documentDate.ToUniversalTime().ToString(Constants.DocumentDateFormat);
+            _dmsContext.SaveChanges();
+            List<string> splittedTags = SplitTags(values.documentTags);
+            file.Note = values.documentNote;
+            _dmsContext.Database.BeginTransaction();
+            try
+            {
+                UpdateFileTags(_dmsContext, splittedTags.ToArray(), file);                    
+                _dmsContext.SaveChanges();
+                _dmsContext.Database.CommitTransaction();                
+            }
+            catch (Exception ex)
+            {
+                _dmsContext.Database.RollbackTransaction();
+                return Problem($"Saving not succesfull - {ex.Message}");
+            }
+            return Ok();
+        }
+
+        public class UpdateDocument
+        {
+            public DateTime documentDate { get; set; }
+            public string documentId { get; set; }
+            public string documentNote { get; set; }
+            public string documentState { get; set; }
+            public string documentTags { get; set; }
+            public string documentTitle { get; set; }
+        }
+
         [HttpPost("/file/{id}")]
         public IActionResult Index(string fileid, int state, string tags, string documentdate, string note)
         {
@@ -176,6 +215,49 @@ namespace CoreDMS.Controllers
                 model.FileDate = DateTime.Parse(file.DocumentDate).ToString(Constants.DateFormatDateTimePicker);
             }
             return View(model);
+        }
+
+        private SingleFileViewModel LoadDocumentById(string documentGuid)
+        {
+            Files file = _dmsContext.Files
+                .Include(f => f.FileTag)
+                    .ThenInclude(filetag => filetag.Tag)
+                .Where(f => f.Id == documentGuid)
+                .FirstOrDefault();
+            SingleFileViewModel model = new SingleFileViewModel(_settings)
+            {
+                File = file
+            };
+            if (model.Tags == null)
+            {
+                model.Tags = string.Empty;
+            }
+            model.Tags = BuildTagString(file.FileTag);
+            List<FileStates> states = _dmsContext.FileStates.ToList();
+            model.FileStates = new List<SelectListItem>();
+            foreach (FileStates state in states)
+            {
+                model.FileStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString() });
+            }
+            if (file.DocumentDate != null && file.DocumentDate.Length > 1)
+            {
+                model.FileDate = DateTime.Parse(file.DocumentDate).ToString(Constants.DateFormatDateTimePicker);
+            }
+            return model;
+        }
+
+        [Route("api/document/{id}")]
+        public IActionResult GetById(string id)
+        {
+            try
+            {
+                new Guid(id);
+            }
+            catch
+            {
+                return StatusCode(500, "invalid file id");
+            }
+            return Ok(this.LoadDocumentById(id));
         }
 
         private static string BuildTagString(ICollection<FileTag> fileTags)
